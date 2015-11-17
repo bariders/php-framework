@@ -1,0 +1,16 @@
+%p
+    #div.btn-group
+        %a.btn.btn-xs.btn-default{ :href => {Button::module($moduleName)}}
+            %i.fa.fa-caret-left
+            %span.visible-lg-inline
+                = 'Show List'
+        %a.btn.btn-xs.btn-default{ :href => {Button::actionId('edit', $values['id'])}}
+            %i.fa.fa-pencil
+            %span.visible-lg-inline
+                = 'Edit'
+
+%h3= $objClassname
+%dl.dl-horizontal.panel-body
+    - foreach($values as $key => $value)
+        %dt= $key
+        %dd= $value

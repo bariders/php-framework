@@ -1,0 +1,41 @@
+#!/bin/bash
+CURREND_DIR=$(dirname $0)
+BASEDIR=$CURREND_DIR/../
+
+mkdir $BASEDIR/app/
+mkdir $BASEDIR/app/controller/
+mkdir $BASEDIR/app/controller/public/
+mkdir $BASEDIR/app/helper/
+mkdir $BASEDIR/app/model/
+mkdir $BASEDIR/app/model/base/
+mkdir $BASEDIR/app/repository/
+mkdir $BASEDIR/app/repository/base/
+mkdir $BASEDIR/app/tmpl/
+mkdir $BASEDIR/app/tmpl/fonts/
+mkdir $BASEDIR/app/tmpl/haml/
+mkdir $BASEDIR/app/tmpl/haml/public/
+mkdir $BASEDIR/app/tmpl/sass/
+mkdir $BASEDIR/app/tmpl/sass/public/
+mkdir $BASEDIR/app/tmpl/sass/public/modules/
+mkdir $BASEDIR/app/tmpl/sass/public/partials/
+touch $BASEDIR/app/tmpl/sass/public/modules/_all.scss
+touch $BASEDIR/app/tmpl/sass/public/partials/_base.scss
+mkdir $BASEDIR/app/tmpl/sass/public/vendor/
+mkdir $BASEDIR/app/tmpl/script/
+mkdir $BASEDIR/app/tmpl/script/public/
+mkdir $BASEDIR/app/tmpl/script/vendor/
+mkdir $BASEDIR/app/vendor/
+mkdir $BASEDIR/app/view/
+mkdir $BASEDIR/app/view/public/
+mkdir $BASEDIR/cache/
+mkdir $BASEDIR/cache/haml/
+mkdir $BASEDIR/config/
+mkdir $BASEDIR/db/
+touch $BASEDIR/db/migration.status
+mkdir $BASEDIR/db/migrate/
+mkdir $BASEDIR/public/
+mkdir $BASEDIR/public/css/
+mkdir $BASEDIR/public/fonts/
+mkdir $BASEDIR/public/img/
+mkdir $BASEDIR/public/css/
+mkdir $BASEDIR/public/js/

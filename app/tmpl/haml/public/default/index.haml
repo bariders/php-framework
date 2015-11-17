@@ -1,0 +1,30 @@
+%a.btn.btn-default.btn-s{ :href => {Button::action('new')} }
+    %i.fa.fa-plus
+    %span.visible-lg-inline
+        = 'Create ' . $objClassname
+
+%p
+    %table.table
+        %thead
+            %tr
+                %th #
+                - foreach ($columnNames as $cn)
+                    %th= $cn
+                %th
+        %tbody
+            - foreach($rows as $row)
+                %tr
+                    - foreach($row as $value)
+                        %td= $value
+
+                    %td{ :class => 'text-right'}
+                        .btn-group
+                            %a.btn.btn-default.btn-xs{ :href => {Button::id($row[0])}}
+                                %i.fa.fa-search
+                                %span.visible-lg-inline
+                                    = 'View'
+
+                            %a.btn.btn-xs.btn-danger{ :href => {Button::actionId('delete', $row[0])}, :data-confirm => " Möchten Sie diesen Eintrag wirklich löschen?", :data-method => "delete"}
+                                %i.fa.fa-trash-o
+                                %span.visible-lg-inline
+                                    = 'Delete'

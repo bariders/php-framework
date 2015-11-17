@@ -1,0 +1,23 @@
+<?php
+/**
+ * Copyright (c) 2011 by Robin Wieschendorf. All Rights
+ * Reserved. Proprietary and Confidential - This source code is not for
+ * redistribution.
+ */
+ 
+class Create{CLASS_NAME}Migration extends \ActiveRecord {
+
+    public function up()
+    {
+        $this->createTable('{TABLE_NAME}',
+            [['id', 'TYPE_PRIMARY'],
+{ATTRIBUTES}
+        );
+    }
+
+
+    public function down()
+    {
+        $this->dropTable('{TABLE_NAME}');
+    }
+}

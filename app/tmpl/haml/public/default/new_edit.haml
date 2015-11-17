@@ -1,0 +1,27 @@
+- if ($objForm->isEdit())
+    %h2= 'Edit ' . $objClassname
+
+    %p
+        #div.btn-group
+            %a.btn.btn-xs.btn-default{ :href => {Button::module($moduleName)}}
+                %i.fa.fa-caret-left
+                %span.visible-lg-inline
+                    = 'View List'
+            %a.btn.btn-xs.btn-default{ :href => {Button::moduleId($moduleName, $objForm->getObj()->getId())} }
+                %i.fa.fa-search
+                %span.visible-lg-inline
+                    = 'Show'
+            %a.btn.btn-xs.btn-danger{ :href => {Button::actionId('delete', $objForm->getObj()->getId())}, :data-confirm => "wirklich löschen", :data-method => "delete"}
+                %i.fa.fa-trash-o
+                %span.visible-lg-inline
+                    = 'Delete'
+
+- else
+    %h2= 'Create ' . $objClassname
+%form{ :role => "form", :method => "post", :action => $objForm->getAction()}
+        - foreach($columnNames as $cn)
+            .form-group
+                = $objForm->get($cn)
+
+    .form-group
+        %button.btn.btn-default{ :type => "submit"}= $submitvalue

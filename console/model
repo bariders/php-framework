@@ -1,0 +1,2 @@
+#!/bin/bash
+php ./../library/core/console/model.php "$@"
