@@ -48,7 +48,7 @@ There is already a example controller *index_public.php*. So you can open your r
 
 First we want to create a User model to store data of a user. User can store a first name and a last name.
 
-Got to the directory:
+Go to the directory:
 
     php-framework/console/
 
