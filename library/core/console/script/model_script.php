@@ -18,43 +18,90 @@ class ModelScript extends Script
     {
         $command = $argv[1];
         if ($command == 'create' || $command == '-c') {
-            Debug::out('Command: create');
             $this->_createModel($argv);
-        } elseif ($command == 'add-att' || $command == '-att') {
-            Debug::out('Command: add-att');
+        } elseif ($command == 'add-att' || $command == '-aa') {
             $this->_addAttributeToModel($argv);
-        } elseif ($command == 'remove-att' || $command == '-ratt') {
-            Debug::out('Command: remove-att');
+        } elseif ($command == 'delete-att' || $command == '-da') {
             $this->_removeAttributeFromModel($argv);
-        } elseif ($command == 'rename-att' || $command == '-reatt') {
-            Debug::out('Command: rename-att');
+        } elseif ($command == 'rename-att' || $command == '-ra') {
             $this->_renameAttributeInModel($argv);
-        } elseif ($command == 'update' || $command == '-u') {
-            Debug::out('Command: update');
+        } elseif ($command == 'update' || $command == '-um') {
             $this->_updateModel($argv);
         } elseif ($command == 'update-all' || $command == '-ua') {
-            Debug::out('Command: update-all');
             $this->_updateModels($argv);
-        } elseif ($command == 'create-controller' || $command == '-co') {
-            Debug::out('Command: create-controller');
+        } elseif ($command == 'create-controller' || $command == '-cc') {
             $this->_createController($argv);
         } elseif ($command === 'help' || $command == '-h') {
-            Debug::out('Command: -h (help)');
-            Debug::out('create or -c ObjName attName:TYPE:[ObjectName] ...');
-            Debug::out('addatt or -aatt ObjName attName:TYPE:[ObjectName]');
-            Debug::out('removeatt or -ratt ObjName attName');
-            Debug::out('renameatt or -reatt ObjName attNameOld attNameNew:TYPE:[ObjectName]');
-            Debug::out('update or -u ObjName');
-            Debug::out('update-all or -ua');
-            Debug::out('create-controller or -co ObjName [App]');
+            $this->_printUsage();
         } else {
-            Debug::out('Command unknown. Try -h for help.');
+            $this->_printUsage();
+        }
+    }
+
+    private function _printUsage()
+    {
+        Debug::err('usage: model COMMAND [OBJECT_NAME [ATTRIBUTE_LIST]]');
+        Debug::err('');
+        Debug::err('Command     Long command        Usage');
+        Debug::err('-c          create              ObjectName attributeName[:TYPE][:ObjectName] ...');
+        Debug::err('-aa         add-att             ObjectName attributeName[:TYPE][:ObjectName]');
+        Debug::err('-ra         rename-att          ObjectName attributeNameOld attributeNameNew[:TYPE][:ObjectName]');
+        Debug::err('-da         delete-att          ObjectName attributeName');
+        Debug::err('-um         update              ObjectName attributeName');
+        Debug::err('-u          update-all');
+        Debug::err('-cc         create-controller   ObjectName');
+        Debug::err('-h          help');
+        Debug::err('');
+        Debug::err('Types: integer, string, text, float, datetime, date, time');
+    }
+
+    private function _checkObjectName($name)
+    {
+        if (!NamingConvention::isUpperCamelCase($name)) {
+            Debug::err('Error: ObjectName must be in UpperCamelCase');
+            Debug::err('');
+            $this->_printUsage();
+            die();
+        }
+    }
+
+    private function _checkAttName($name)
+    {
+        if (!NamingConvention::isLowerCamelCase($name)) {
+            Debug::err('Error: attributeName must be in lowerCamelCase');
+            Debug::err('');
+            $this->_printUsage();
+            die();
+        }
+        if (substr($name, -2, 2) == 'ID') {
+            Debug::err('Error: Id attributeName must end with Id not ID');
+            Debug::err('');
+            $this->_printUsage();
+            die();
+        }
+    }
+
+    private function _checkStructure($structure)
+    {
+        if (count($structure) == 0) {
+            Debug::err('Error: missing attributes');
+            Debug::err('');
+            $this->_printUsage();
+            die();
+        }
+
+        foreach($structure as $key => $definition) {
+            $this->_checkAttName($key);
+            if ($definition[1]) {
+                $this->_checkObjectName($definition[1]);
+            }
         }
     }
 
     private function _createController($argv)
     {
         $objName = $argv[2];
+        $this->_checkObjectName($objName);
         $app = $argv[3];
         $controllerFileCreator = new ControllerFileCreator();
         $controllerFileCreator->createModelControllerFile($objName, $app);
@@ -63,7 +110,9 @@ class ModelScript extends Script
     private function _createModel($argv)
     {
         $objName = $argv[2];
+        $this->_checkObjectName($objName);
         $structure = $this->_parseStructure($argv, 3);
+        $this->_checkStructure($structure);
 
         $modelFileCreator = new ModelFileCreator();
         $modelFileCreator->createModelBaseFile($objName, $structure);
@@ -78,6 +127,7 @@ class ModelScript extends Script
     private function _updateModel($argv)
     {
         $objName = $argv[2];
+        $this->_checkObjectName($objName);
 
         $objBaseRepositoryName = $objName . 'BaseRepository';
         $objBaseRepositoryFileName = NamingConvention::camelCaseToSnakeCase($objName) . '_base_repo.php';
@@ -129,7 +179,11 @@ class ModelScript extends Script
     private function _addAttributeToModel($argv)
     {
         $objName = $argv[2];
+        $this->_checkObjectName($objName);
+
         $structureAdd = $this->_parseStructure($argv, 3);
+        $this->_checkStructure($structureAdd);
+
         $attName = key($structureAdd);
         $definitions = $structureAdd[$attName];
 
@@ -151,6 +205,7 @@ class ModelScript extends Script
     private function _removeAttributeFromModel($argv)
     {
         $objName = $argv[2];
+        $this->_checkObjectName($objName);
         $attName = $argv[3];
 
         $objBaseRepositoryName = $objName . 'BaseRepository';
@@ -172,8 +227,10 @@ class ModelScript extends Script
     private function _renameAttributeInModel($argv)
     {
         $objName = $argv[2];
+        $this->_checkObjectName($objName);
         $attNameOld = $argv[3];
         $structureNew = $this->_parseStructure($argv, 4);
+        $this->_checkStructure($structureNew);
         $attNameNew = key($structureNew);
         $definitionsNew = $structureNew[$attNameNew];
 
@@ -208,10 +265,6 @@ class ModelScript extends Script
 
     private function _paraseType($type)
     {
-        if ($type == '') {
-            return 'TYPE_INT';
-        }
-
         $typeDef['TYPE_INT']        = TYPE_INT;
         $typeDef['type_int']        = TYPE_INT;
         $typeDef['integer']         = TYPE_INT;
@@ -245,6 +298,10 @@ class ModelScript extends Script
         $typeDef['type_time']       = TYPE_TIME;
         $typeDef['time']            = TYPE_TIME;
 
-        return $typeDef[$type];
+        if (!$typeDef[$type]) {
+            return TYPE_INT;
+        } else {
+            return $typeDef[$type];
+        }
     }
 }
