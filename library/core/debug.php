@@ -5,7 +5,7 @@
  * redistribution.
  */
 class Debug {
-    
+
     static public function out($mix)
     {
         if (DEBUG_MODE == 'ON') {
@@ -20,6 +20,18 @@ class Debug {
         }
     }
 
+    static public function err($mix)
+    {
+        if (CONSOLE_EXC == 'ON') {
+            $str = print_r($mix, ture);
+            file_put_contents('php://stderr', $str . "\n");
+        } else {
+            echo '<pre>';
+            print_r($mix);
+            echo '</pre>';
+        }
+    }
+    
     static public function log($mix)
     {
         echo $mix . "\n";
