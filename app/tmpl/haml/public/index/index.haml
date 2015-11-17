@@ -1,18 +1,52 @@
+:css
+    .starter-template {
+      padding: 40px 15px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+
 .starter-template
-    %h1 Glückwunsch, es funktioniert!
-    %p.lead
-          Und so geht es jetzt weiter ...
+    .text-center
+        %h1 It works!
+        %p.lead
+              Now we can create our first model, controller and view.
+              %br/
+              Let's get started ...
+        %br
 
-%h3 Setup Verzeichesstruktur
-%p Gehe im Terminal in das Verzeichnis von php-framework und rufe danach folgende Befehle auf:
-%code > cd console
-%br
-%code > ./setup
+    %h3 Creating our first Model - "User"
+    %p
+        First we want to create a
+        %code User
+        model to store data of a user. User can store a first name and a last name.
+        %br
 
-%h3 Setup Gulp (Optional)
+        Got to the directory:
+        %pre  php-framework/console/
+        %br
 
-%h3 Setup Datenbank
+        Now execute:
+        %pre  ./model create User firstName:string lastName:string
+        %br
 
-%h3 Ein erstes Model "User" erstellen
+        Now we have to migrate the
+        %code User
+        into our database:
+        %pre  ./migrate -m User
+        %br
 
-%h3 Einen Controller für das Model "User"
+    %h3 Creating a controller for "User"
+    %p
+        To access the
+        %code User
+        by browser, we need a simple default controller. We can create this controller with:
+        %br
+
+        %pre ./model create-controller User
+        %br
+
+        Now you can open the web-page
+        %code localhost/index.php?module=users
+        Don't forget the 's'.
