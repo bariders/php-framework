@@ -4,11 +4,31 @@
  * Reserved. Proprietary and Confidential - This source code is not for
  * redistribution.
  */
- 
+
 class NamingConvention {
     static public function isCamelCase($str)
     {
         return ctype_alpha($str);
+    }
+
+    static public function isUpperCamelCase($str)
+    {
+        if (!ctype_upper(substr($str, 0 ,1))) {
+            return false;
+        } elseif (!ctype_alpha($str)) {
+            return false;
+        }
+        return true;
+    }
+
+    static public function isLowerCamelCase($str)
+    {
+        if (!ctype_lower(substr($str, 0 ,1))) {
+            return false;
+        } elseif (!ctype_alpha($str)) {
+            return false;
+        }
+        return true;
     }
 
     static public function isSnakeCase($str)
