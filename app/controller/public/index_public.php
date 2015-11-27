@@ -8,14 +8,9 @@ load_file('/app/view/public/index_public_view.php');
 
 class IndexPublicController extends Controller {
 
-    public function invokeIndex()
+    public function invoke()
     {
         $view = new IndexPublicView();
         $view->showIndex();
-    }
-
-    public function invoke()
-    {
-
     }
 }

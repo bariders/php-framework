@@ -9,9 +9,16 @@ class Dispatcher extends Controller {
     private $_errorApp;
     private $_errorModule;
     private $_errorAction;
-    private $_indexApp    = 'public';
-    private $_indexModule = 'index';
-    private $_indexAction = 'index';
+    private $_indexApp      = 'public';
+    private $_indexModule   = 'index';
+    private $_indexAction   = '';
+    private $_showAction    = 'show';
+    private $_defaultRoute  = ['app','module','id','action'];
+
+    public function setDefaultRoute($value)
+    {
+        $this->_defaultRoute = $value;
+    }
 
     public function setIndexApp($value)
     {
@@ -73,7 +80,16 @@ class Dispatcher extends Controller {
 
     private function _getQuery()
     {
-        parse_str($_SERVER['QUERY_STRING'], $query);
+        //Debug::out('REWRITTEN_URI');
+        //Debug::out($_SERVER["SCRIPT_NAME"] . '?' . $_SERVER["QUERY_STRING"]);
+        //Debug::out('REQUEST_URI');
+        //Debug::out($_SERVER['REQUEST_URI']);
+        //Debug::out('QUERY_STRING');
+        //Debug::out($_SERVER['QUERY_STRING']);
+        $query = $this->_parseUri($this->_defaultRoute);
+
+        //Debug::out($query);
+
         if (!isset($query['app']) && !isset($query['module']) && !isset($query['action'])) {
             $query['app']       = $this->_indexApp;
             $query['module']    = $this->_indexModule;
@@ -88,11 +104,68 @@ class Dispatcher extends Controller {
             $query['module']    = $this->_indexModule;
         }
 
-        if (!isset($query['action']) && !isset($query['id'])) {
-            $query['action']    = $this->_indexAction;
+        if (!isset($query['action'])) {
+            if (!isset($query['id'])) {
+                $query['action']    = $this->_indexAction;
+            } else {
+                $query['action']    = $this->_showAction;
+            }
         }
+        $_GET = $query;
+
+        //Debug::out($query);
 
         return $query;
+    }
+
+    private function _parseUri($route)
+    {
+        $uri = $this->_getUri();
+
+        if ($uri['mode'] == 1 || $uri['mode'] == 3) {
+            parse_str($uri['query'], $query);
+            return $query;
+        } elseif ($uri['mode'] == 2 || $uri['mode'] == 4) {
+            $array = explode('/', $uri['uri']);
+            $array = array_filter($array);
+            $index = 0;
+            foreach($array as $value) {
+                $query[$route[$index++]] = $value;
+            }
+            return $query;
+        }
+    }
+
+    private function _getUri()
+    {
+        if (!$this->_isUriRewritten()) {
+            if (substr($_SERVER['REQUEST_URI'], 0, 11) == '/index.php?') {
+                return ['mode' => 1, 'uri' => $_SERVER['REQUEST_URI'], 'query' => $_SERVER['QUERY_STRING']];
+            } else {
+                return ['mode' => 2, 'uri' => $_SERVER['REQUEST_URI'], 'query' => $_SERVER['QUERY_STRING']];
+            }
+        } else {
+            if ($_SERVER['QUERY_STRING']) {
+                return ['mode' => 3, 'uri' => $this->_getRewrittenUri, 'query' => $_SERVER['QUERY_STRING']];
+            } else {
+                return ['mode' => 4, 'uri' => $_SERVER['REQUEST_URI'], 'query' => $_SERVER['QUERY_STRING']];
+            }
+        }
+    }
+
+    private function _isUriRewritten()
+    {
+        $rewrittenUri = $this->_getRewrittenUri();
+        if ($rewrittenUri != $_SERVER['REQUEST_URI']) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function _getRewrittenUri()
+    {
+        return $_SERVER["SCRIPT_NAME"] . '?' . $_SERVER["QUERY_STRING"];
     }
 
     private function _getErrorQuery()

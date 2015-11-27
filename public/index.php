@@ -10,7 +10,7 @@ require_once('../library/core.php');
 * SCRIPT - START *
 ******************/
 $dispatcher = new Dispatcher();
-$dispatcher->setIndexModule('public');
+$dispatcher->setDefaultRoute(['app','module','id','action']);
+$dispatcher->setIndexApp('public');
 $dispatcher->setIndexModule('index');
-$dispatcher->setIndexAction('index');
 $dispatcher->invoke();

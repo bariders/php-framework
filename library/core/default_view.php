@@ -24,13 +24,13 @@ class DefaultView extends View
         $this->showTmpl();
     }
 
-    public function showDefaultIndex($objClassname, $columnNames, $rows)
+    public function showDefaultIndex($objClassname, $structure, $rows)
     {
         $this->setTemplate($this->_standardTmpl);
         $this->loadTmplVar('CONTENT', '/app/tmpl/haml/public/default/index.haml');
         $this->addHamlVar('objClassname', $objClassname);
         $this->addHamlVar('moduleName', NamingConvention::camelCaseToSnakeCase($objClassname) . 's');
-        $this->addHamlVar('columnNames', $columnNames);
+        $this->addHamlVar('structure', $structure);
         $this->addHamlVar('rows', $rows);
         $this->showTmpl();
     }

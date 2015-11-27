@@ -7,14 +7,14 @@
 
 class {CLASS_NAME}{APP}Controller extends Controller {
 
-    public function invokeIndex()
+    public function invoke()
     {
         $this->invokeDefaultIndex();
     }
-
-    public function invoke()
+    
+    public function invokeShow()
     {
-        $this->invokeDefault();
+        $this->invokeDefaultShow();
     }
 
     public function invokeNew()

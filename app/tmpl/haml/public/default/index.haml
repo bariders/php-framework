@@ -8,18 +8,27 @@
         %thead
             %tr
                 %th #
-                - foreach ($columnNames as $cn)
-                    %th= $cn
+                - foreach ($structure as $attName => $definition)
+                    %th= $attName
                 %th
         %tbody
+            - $structure = array_values($structure);
             - foreach($rows as $row)
                 %tr
+                    - $index = -2;
                     - foreach($row as $value)
-                        %td= $value
+                        - $index++
+                        - if ($structure[$index][1])
+                            %td
+                                %a{ :href => {Button::moduleId($structure[$index][1] . 's', $value[0])}}
+                                    = $structure[$index][1] . ' (' . $value[0] . ')';
+                        - else
+                            %td= $value;
+
 
                     %td{ :class => 'text-right'}
                         .btn-group
-                            %a.btn.btn-default.btn-xs{ :href => {Button::id($row[0])}}
+                            %a.btn.btn-default.btn-xs{ :href => {Button::actionId('', $row[0])}}
                                 %i.fa.fa-search
                                 %span.visible-lg-inline
                                     = 'View'

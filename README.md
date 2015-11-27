@@ -66,4 +66,4 @@ To access the User by browser, we need a simple default controller. We can creat
 
     ./model create-controller User
 
-Now you can open the web-page *"localhost/index.php?module=users"* Don't forget the 's'.
+Now you can open the web-page *"localhost/public/users"* Don't forget the 's'.
